@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ Analyzer — DirectCloud</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0f1117;
+    --surface:  #171b26;
+    --surface2: #1e2333;
+    --border:   #2a3045;
+    --border2:  #3a4560;
+    --accent:   #3b7ef8;
+    --accent2:  #5b9bff;
+    --text:     #e2e8f4;
+    --muted:    #8896b3;
+    --muted2:   #5c6a85;
+    --green:    #22c55e;
+    --amber:    #f59e0b;
+    --red:      #ef4444;
+    --cyan:     #22d3ee;
+    --mono:     'IBM Plex Mono', monospace;
+    --sans:     'Noto Sans KR', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 13px; min-height: 100vh; }
+
+  .topnav {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    height: 48px; display: flex; align-items: center; padding: 0 20px; gap: 12px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo { font-family: var(--mono); font-size: 13px; color: var(--accent2); letter-spacing: .04em; display: flex; align-items: center; gap: 8px; }
+  .logo-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .nav-sep { width: 1px; height: 20px; background: var(--border); }
+  .nav-title { color: var(--muted); font-size: 12px; }
+  .nav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .last-run { font-size: 11px; color: var(--muted2); font-family: var(--mono); }
+  .btn-run {
+    background: var(--accent); color: #fff; font-size: 11px; font-weight: 700;
+    padding: 5px 14px; border-radius: 4px; cursor: pointer; display: flex;
+    align-items: center; gap: 6px; border: none; font-family: var(--sans); transition: background .15s;
+  }
+  .btn-run:hover { background: var(--accent2); }
+  .btn-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.5); }
+
+  .layout { display: flex; height: calc(100vh - 48px); }
+
+  .sidebar {
+    width: 216px; background: var(--surface); border-right: 1px solid var(--border);
+    padding: 14px 0; flex-shrink: 0; overflow-y: auto;
+  }
+  .sb-label { font-size: 10px; font-family: var(--mono); color: var(--muted2); letter-spacing: .08em; text-transform: uppercase; padding: 10px 16px 4px; }
+  .sb-item { display: flex; align-items: center; gap: 9px; padding: 7px 16px; cursor: pointer; color: var(--muted); border-left: 2px solid transparent; transition: all .12s; font-size: 12.5px; }
+  .sb-item:hover { background: var(--surface2); color: var(--text); }
+  .sb-item.active { background: rgba(59,126,248,.1); color: var(--accent2); border-left-color: var(--accent); }
+  .sb-count { margin-left: auto; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-size: 10px; font-family: var(--mono); padding: 1px 6px; border-radius: 10px; }
+  .sb-item.active .sb-count { background: rgba(59,126,248,.15); border-color: rgba(59,126,248,.3); color: var(--accent2); }
+
+  .main { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .stat-label { font-size: 10px; color: var(--muted); margin-bottom: 6px; font-family: var(--mono); }
+  .stat-val { font-size: 28px; font-weight: 700; line-height: 1; }
+  .stat-sub { font-size: 10px; color: var(--muted2); margin-top: 4px; font-family: var(--mono); }
+  .c-blue { color: var(--accent2); } .c-green { color: var(--green); } .c-amber { color: var(--amber); } .c-cyan { color: var(--cyan); }
+
+  .toolbar { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tb-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-right: 4px; }
+  .chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border); font-size: 11px; cursor: pointer; color: var(--muted); background: var(--surface2); transition: all .12s; }
+  .chip:hover { border-color: var(--accent); color: var(--accent2); }
+  .chip.on { border-color: var(--accent); color: var(--accent2); background: rgba(59,126,248,.1); }
+  .tb-right { margin-left: auto; }
+  .sort-sel { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-size: 11px; padding: 4px 8px; border-radius: 4px; font-family: var(--sans); cursor: pointer; }
+
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: border-color .15s; }
+  .card:hover { border-color: var(--border2); }
+  .card.open { border-color: var(--accent); }
+  .card-header { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; user-select: none; }
+
+  .score { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex-shrink: 0; font-family: var(--mono); }
+  .s5 { background: rgba(34,197,94,.15);  color: var(--green); border: 1px solid rgba(34,197,94,.3); }
+  .s4 { background: rgba(34,211,238,.12); color: var(--cyan);  border: 1px solid rgba(34,211,238,.3); }
+  .s3 { background: rgba(245,158,11,.12); color: var(--amber); border: 1px solid rgba(245,158,11,.3); }
+  .s2 { background: rgba(239,68,68,.10);  color: var(--red);   border: 1px solid rgba(239,68,68,.2); }
+
+  .card-info { flex: 1; min-width: 0; }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+  .card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+  .cat { font-size: 10px; font-family: var(--mono); padding: 2px 7px; border-radius: 3px; border: 1px solid; }
+  .cat-file { color: #60a5fa; border-color: rgba(96,165,250,.3);  background: rgba(96,165,250,.08); }
+  .cat-mob  { color: #a78bfa; border-color: rgba(167,139,250,.3); background: rgba(167,139,250,.08); }
+  .cat-perm { color: #34d399; border-color: rgba(52,211,153,.3);  background: rgba(52,211,153,.08); }
+  .cat-auth { color: #fb923c; border-color: rgba(251,146,60,.3);  background: rgba(251,146,60,.08); }
+  .cat-net  { color: #f87171; border-color: rgba(248,113,113,.3); background: rgba(248,113,113,.08); }
+  .grp { font-size: 10px; color: var(--muted2); font-family: var(--mono); }
+  .grp b { color: var(--muted); }
+
+  .card-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .bl-link { font-size: 10px; font-family: var(--mono); color: var(--muted2); text-decoration: none; padding: 3px 8px; border: 1px solid var(--border); border-radius: 3px; transition: all .12s; white-space: nowrap; }
+  .bl-link:hover { color: var(--accent2); border-color: var(--accent); }
+  .chevron { color: var(--muted2); font-size: 11px; transition: transform .2s; }
+  .card.open .chevron { transform: rotate(180deg); }
+
+  .card-body { display: none; border-top: 1px solid var(--border); }
+  .card.open .card-body { display: block; }
+  .card-body-inner { padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  .panel { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; }
+  .panel-title { font-size: 10px; font-family: var(--mono); color: var(--muted2); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .panel-title::before { content: ''; width: 3px; height: 10px; border-radius: 2px; background: var(--accent); display: inline-block; }
+  .draft-q { color: var(--accent2); font-weight: 700; margin-bottom: 6px; font-size: 12.5px; }
+  .draft-a { color: var(--text); line-height: 1.7; font-size: 12px; }
+
+  .sim-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 11.5px; color: var(--muted); }
+  .sim-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .sim-id { font-family: var(--mono); font-size: 10px; color: var(--muted2); flex-shrink: 0; }
+  .sim-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sim-link { font-family: var(--mono); font-size: 10px; color: var(--muted2); text-decoration: none; flex-shrink: 0; }
+  .sim-link:hover { color: var(--accent2); }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="logo"><div class="logo-dot"></div>DirectCloud</div>
+  <div class="nav-sep"></div>
+  <span class="nav-title">FAQ Analyzer</span>
+  <div class="nav-right">
+    <span class="last-run">마지막 분석: 2025-03-01 &nbsp;|&nbsp; 최근 12개월</span>
+    <button class="btn-run"><div class="btn-dot"></div>분석 실행</button>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sb-label">카테고리</div>
+    <div class="sb-item active" onclick="sbClick(this)"><span>전체</span><span class="sb-count">24</span></div>
+    <div class="sb-item" onclick="sbClick(this)"><span>📁 파일공유</span><span class="sb-count">8</span></div>
+    <div class="sb-item" onclick="sbClick(this)"><span>📱 모바일앱</span><span class="sb-count">5</span></div>
+    <div class="sb-item" onclick="sbClick(this)"><span>🔐 권한관리</span><span class="sb-count">4</span></div>
+    <div class="sb-item" onclick="sbClick(this)"><span>🔑 인증/로그인</span><span class="sb-count">4</span></div>
+    <div class="sb-item" onclick="sbClick(this)"><span>🌐 네트워크</span><span class="sb-count">3</span></div>
+    <div class="sb-label" style="margin-top:10px;">FAQ 적합도</div>
+    <div class="sb-item" onclick="sbClick(this)"><span>★★★★★ 5점</span><span class="sb-count">7</span></div>
+    <div class="sb-item" onclick="sbClick(this)"><span>★★★★ 4점</span><span class="sb-count">9</span></div>
+    <div class="sb-item" onclick="sbClick(this)"><span>★★★ 3점</span><span class="sb-count">8</span></div>
+  </aside>
+
+  <main class="main">
+    <div class="stats">
+      <div class="stat"><div class="stat-label">분석된 문의</div><div class="stat-val c-blue">142</div><div class="stat-sub">최근 12개월</div></div>
+      <div class="stat"><div class="stat-label">FAQ 후보 (4점↑)</div><div class="stat-val c-green">24</div><div class="stat-sub">전체의 16.9%</div></div>
+      <div class="stat"><div class="stat-label">유사 문의 그룹</div><div class="stat-val c-amber">11</div><div class="stat-sub">평균 2.2건/그룹</div></div>
+      <div class="stat"><div class="stat-label">초안 자동 생성</div><div class="stat-val c-cyan">24</div><div class="stat-sub">FAQ 후보 전체</div></div>
+    </div>
+
+    <div class="toolbar">
+      <span class="tb-label">필터</span>
+      <div class="chip on" onclick="this.classList.toggle('on')">전체</div>
+      <div class="chip" onclick="this.classList.toggle('on')">5점</div>
+      <div class="chip" onclick="this.classList.toggle('on')">4점</div>
+      <div class="chip" onclick="this.classList.toggle('on')">그룹 있음</div>
+      <div class="tb-right">
+        <select class="sort-sel">
+          <option>적합도 높은 순</option>
+          <option>유사 건수 많은 순</option>
+          <option>최신 순</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="faq-list">
+
+      <div class="card" id="c1">
+        <div class="card-header" onclick="toggle('c1')">
+          <div class="score s5">5</div>
+          <div class="card-info">
+            <div class="card-title">공유 링크를 클릭하면 "접근 권한이 없습니다" 오류가 납니다</div>
+            <div class="card-meta"><span class="cat cat-file">파일공유</span><span class="grp">유사 문의 <b>8건</b> 묶음</span></div>
+          </div>
+          <div class="card-right"><a class="bl-link" href="#" onclick="return false">#1042 ↗</a><span class="chevron">▼</span></div>
+        </div>
+        <div class="card-body"><div class="card-body-inner">
+          <div class="panel">
+            <div class="panel-title">FAQ 초안</div>
+            <div class="draft-q">Q. 공유 링크를 클릭하면 접근 권한 오류가 발생합니다.</div>
+            <div class="draft-a">A. 공유 링크의 만료 기간을 확인해주세요. 링크 생성 시 설정한 유효 기간이 지났거나, 공유 설정이 변경된 경우 이 오류가 발생합니다. 관리자에게 링크 재발급을 요청하시거나, 공유 설정에서 '링크 공유' 옵션이 활성화되어 있는지 확인해주세요.</div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">유사 문의 8건</div>
+            <div class="sim-row"><span class="sim-id">#1042</span><span class="sim-title">공유 링크 클릭 시 권한 오류</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+            <div class="sim-row"><span class="sim-id">#1067</span><span class="sim-title">링크 열면 접근 불가 메시지 표시</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+            <div class="sim-row"><span class="sim-id">#1089</span><span class="sim-title">외부 사용자 공유 링크 오류</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+            <div class="sim-row"><span class="sim-id">#1102</span><span class="sim-title">공유 URL 접속 안 됨</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+            <div class="sim-row"><span class="sim-id" style="color:var(--muted2)">+4건</span><span class="sim-title" style="color:var(--muted2)">더 보기</span></div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="card" id="c2">
+        <div class="card-header" onclick="toggle('c2')">
+          <div class="score s5">5</div>
+          <div class="card-info">
+            <div class="card-title">모바일 앱에서 파일 업로드가 되지 않습니다</div>
+            <div class="card-meta"><span class="cat cat-mob">모바일앱</span><span class="grp">유사 문의 <b>5건</b> 묶음</span></div>
+          </div>
+          <div class="card-right"><a class="bl-link" href="#" onclick="return false">#1089 ↗</a><span class="chevron">▼</span></div>
+        </div>
+        <div class="card-body"><div class="card-body-inner">
+          <div class="panel">
+            <div class="panel-title">FAQ 초안</div>
+            <div class="draft-q">Q. 모바일 앱에서 파일 업로드가 안 됩니다.</div>
+            <div class="draft-a">A. 모바일 앱의 저장 공간 접근 권한을 확인해주세요. iOS는 설정 → DirectCloud → 사진/파일 접근 허용, Android는 설정 → 앱 → DirectCloud → 권한에서 확인할 수 있습니다. 권한 설정 후에도 문제가 지속되면 앱을 최신 버전으로 업데이트해주세요.</div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">유사 문의 5건</div>
+            <div class="sim-row"><span class="sim-id">#1089</span><span class="sim-title">모바일 업로드 실패</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+            <div class="sim-row"><span class="sim-id">#1095</span><span class="sim-title">iOS에서 파일 첨부 안 됨</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+            <div class="sim-row"><span class="sim-id">#1110</span><span class="sim-title">안드로이드 업로드 오류</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+            <div class="sim-row"><span class="sim-id" style="color:var(--muted2)">+2건</span><span class="sim-title" style="color:var(--muted2)">더 보기</span></div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="card" id="c3">
+        <div class="card-header" onclick="toggle('c3')">
+          <div class="score s4">4</div>
+          <div class="card-info">
+            <div class="card-title">폴더 편집 권한을 특정 사용자에게만 부여할 수 있나요?</div>
+            <div class="card-meta"><span class="cat cat-perm">권한관리</span><span class="grp">유사 문의 <b>4건</b> 묶음</span></div>
+          </div>
+          <div class="card-right"><a class="bl-link" href="#" onclick="return false">#1103 ↗</a><span class="chevron">▼</span></div>
+        </div>
+        <div class="card-body"><div class="card-body-inner">
+          <div class="panel">
+            <div class="panel-title">FAQ 초안</div>
+            <div class="draft-q">Q. 특정 사용자에게만 폴더 편집 권한을 줄 수 있나요?</div>
+            <div class="draft-a">A. 네, 가능합니다. 해당 폴더에서 우클릭 → '공유 및 권한 설정'을 선택한 후 사용자를 추가하고 권한을 '편집 가능'으로 설정해주세요. 상위 폴더의 권한이 하위 폴더에 상속될 수 있으니, 상위 폴더 설정도 함께 확인해주세요.</div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">유사 문의 4건</div>
+            <div class="sim-row"><span class="sim-id">#1103</span><span class="sim-title">폴더별 권한 개별 설정 방법</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+            <div class="sim-row"><span class="sim-id">#1118</span><span class="sim-title">사용자별 접근 권한 제한</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+            <div class="sim-row"><span class="sim-id">#1125</span><span class="sim-title">편집 권한 부여 방법 문의</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+            <div class="sim-row"><span class="sim-id" style="color:var(--muted2)">+1건</span><span class="sim-title" style="color:var(--muted2)">더 보기</span></div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="card" id="c4">
+        <div class="card-header" onclick="toggle('c4')">
+          <div class="score s4">4</div>
+          <div class="card-info">
+            <div class="card-title">SSO 로그인 후 자동으로 로그아웃됩니다</div>
+            <div class="card-meta"><span class="cat cat-auth">인증/로그인</span><span class="grp">유사 문의 <b>3건</b> 묶음</span></div>
+          </div>
+          <div class="card-right"><a class="bl-link" href="#" onclick="return false">#1131 ↗</a><span class="chevron">▼</span></div>
+        </div>
+        <div class="card-body"><div class="card-body-inner">
+          <div class="panel">
+            <div class="panel-title">FAQ 초안</div>
+            <div class="draft-q">Q. SSO 로그인 후 자동 로그아웃이 발생합니다.</div>
+            <div class="draft-a">A. 세션 유지 시간 설정을 확인해주세요. 관리자 콘솔 → 보안 설정 → 세션 타임아웃 값이 짧게 설정되어 있을 수 있습니다. 또한 브라우저의 서드파티 쿠키 차단이 활성화된 경우에도 이 문제가 발생할 수 있습니다.</div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">유사 문의 3건</div>
+            <div class="sim-row"><span class="sim-id">#1131</span><span class="sim-title">SSO 자동 로그아웃 문제</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+            <div class="sim-row"><span class="sim-id">#1144</span><span class="sim-title">로그인 유지 안 됨</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+            <div class="sim-row"><span class="sim-id">#1158</span><span class="sim-title">세션 만료 빈번 발생</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="card" id="c5">
+        <div class="card-header" onclick="toggle('c5')">
+          <div class="score s3">3</div>
+          <div class="card-info">
+            <div class="card-title">특정 IP에서만 접속이 불가능합니다</div>
+            <div class="card-meta"><span class="cat cat-net">네트워크</span><span class="grp">유사 문의 <b>1건</b></span></div>
+          </div>
+          <div class="card-right"><a class="bl-link" href="#" onclick="return false">#1162 ↗</a><span class="chevron">▼</span></div>
+        </div>
+        <div class="card-body"><div class="card-body-inner">
+          <div class="panel">
+            <div class="panel-title">FAQ 초안</div>
+            <div class="draft-q">Q. 특정 네트워크(IP)에서만 접속이 안 됩니다.</div>
+            <div class="draft-a">A. IP 허용 목록 설정을 확인해주세요. 관리자 콘솔 → 네트워크 보안에서 IP 제한 정책 설정 여부를 확인해주세요. 회사 VPN을 사용 중이라면 VPN IP가 허용 목록에 포함되어 있어야 합니다.</div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">유사 문의 1건</div>
+            <div class="sim-row"><span class="sim-id">#1162</span><span class="sim-title">사무실 네트워크 접속 불가</span><a class="sim-link" href="#" onclick="return false">↗</a></div>
+            <div class="sim-row" style="padding-top:8px;border-bottom:none;">
+              <span style="font-size:11px;color:var(--amber);font-family:var(--mono);">⚠ 고객사 개별 환경 이슈일 수 있어 FAQ 적합도 낮음</span>
+            </div>
+          </div>
+        </div></div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  function toggle(id) { document.getElementById(id).classList.toggle('open'); }
+  function sbClick(el) { document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); }
+</script>
+</body>
+</html>
