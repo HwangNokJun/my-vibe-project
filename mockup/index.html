@@ -14,17 +14,15 @@
   }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:13px; min-height:100vh; }
-
   .topnav { background:var(--surface); border-bottom:1px solid var(--border); height:48px; display:flex; align-items:center; padding:0 20px; gap:12px; position:sticky; top:0; z-index:100; }
   .logo { font-family:var(--mono); font-size:13px; color:var(--accent2); display:flex; align-items:center; gap:8px; }
   .logo-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); }
   .nav-sep { width:1px; height:20px; background:var(--border); }
   .nav-title { color:var(--muted); font-size:12px; }
-  .nav-right { margin-left:auto; }
+  .nav-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+  .demo-badge { font-size:10px; font-family:var(--mono); color:var(--amber); border:1px solid rgba(245,158,11,.3); background:rgba(245,158,11,.08); padding:3px 8px; border-radius:3px; }
   .last-run { font-size:11px; color:var(--muted2); font-family:var(--mono); }
-
   .layout { display:flex; height:calc(100vh - 48px); }
-
   .sidebar { width:216px; background:var(--surface); border-right:1px solid var(--border); padding:14px 0; flex-shrink:0; overflow-y:auto; }
   .sb-label { font-size:10px; font-family:var(--mono); color:var(--muted2); letter-spacing:.08em; text-transform:uppercase; padding:10px 16px 4px; }
   .sb-item { display:flex; align-items:center; gap:9px; padding:7px 16px; cursor:pointer; color:var(--muted); border-left:2px solid transparent; transition:all .12s; font-size:12.5px; }
@@ -32,44 +30,20 @@
   .sb-item.active { background:rgba(59,126,248,.1); color:var(--accent2); border-left-color:var(--accent); }
   .sb-count { margin-left:auto; background:var(--surface2); border:1px solid var(--border); color:var(--muted); font-size:10px; font-family:var(--mono); padding:1px 6px; border-radius:10px; }
   .sb-item.active .sb-count { background:rgba(59,126,248,.15); border-color:rgba(59,126,248,.3); color:var(--accent2); }
-
   .main { flex:1; overflow-y:auto; padding:20px 24px; display:flex; flex-direction:column; gap:14px; }
-
-  /* Setup */
-  .setup-wrap { display:flex; align-items:center; justify-content:center; height:100%; }
-  .setup-panel { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:32px 36px; width:500px; }
-  .setup-title { font-size:16px; font-weight:700; margin-bottom:6px; }
-  .setup-desc { font-size:12px; color:var(--muted); margin-bottom:24px; line-height:1.7; }
-  .field { margin-bottom:16px; }
-  .field label { display:block; font-size:10px; font-family:var(--mono); color:var(--muted2); margin-bottom:6px; text-transform:uppercase; letter-spacing:.06em; }
-  .field input { width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); font-family:var(--mono); font-size:12px; padding:9px 12px; border-radius:5px; outline:none; transition:border-color .15s; }
-  .field input:focus { border-color:var(--accent); }
-  .field input::placeholder { color:var(--muted2); }
-  .btn-primary { width:100%; background:var(--accent); color:#fff; font-size:13px; font-weight:700; padding:11px; border-radius:5px; border:none; cursor:pointer; font-family:var(--sans); transition:background .15s; margin-top:4px; }
-  .btn-primary:hover { background:var(--accent2); }
-  .btn-primary:disabled { background:var(--muted2); cursor:not-allowed; }
-  .setup-note { font-size:11px; color:var(--muted2); margin-top:14px; line-height:1.7; font-family:var(--mono); }
-
-  /* Stats */
   .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
   .stat { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px 16px; }
   .stat-label { font-size:10px; color:var(--muted); margin-bottom:6px; font-family:var(--mono); }
   .stat-val { font-size:28px; font-weight:700; line-height:1; }
   .stat-sub { font-size:10px; color:var(--muted2); margin-top:4px; font-family:var(--mono); }
   .c-blue{color:var(--accent2);} .c-green{color:var(--green);} .c-amber{color:var(--amber);} .c-cyan{color:var(--cyan);}
-
-  /* Toolbar */
   .toolbar { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px 14px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
   .tb-label { font-size:11px; color:var(--muted); font-family:var(--mono); margin-right:4px; }
   .chip { display:inline-flex; align-items:center; padding:4px 10px; border-radius:4px; border:1px solid var(--border); font-size:11px; cursor:pointer; color:var(--muted); background:var(--surface2); transition:all .12s; }
   .chip:hover { border-color:var(--accent); color:var(--accent2); }
   .chip.on { border-color:var(--accent); color:var(--accent2); background:rgba(59,126,248,.1); }
-  .tb-right { margin-left:auto; display:flex; gap:8px; }
+  .tb-right { margin-left:auto; }
   .sort-sel { background:var(--surface2); border:1px solid var(--border); color:var(--muted); font-size:11px; padding:4px 8px; border-radius:4px; font-family:var(--sans); cursor:pointer; }
-  .btn-reset { background:transparent; border:1px solid var(--border); color:var(--muted); font-size:11px; padding:4px 10px; border-radius:4px; cursor:pointer; transition:all .12s; }
-  .btn-reset:hover { border-color:var(--accent); color:var(--accent2); }
-
-  /* Cards */
   .faq-list { display:flex; flex-direction:column; gap:8px; }
   .card { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; transition:border-color .15s; }
   .card:hover { border-color:var(--border2); }
@@ -112,15 +86,7 @@
   .sim-row:last-child { border-bottom:none; }
   .sim-id { font-family:var(--mono); font-size:10px; color:var(--muted2); flex-shrink:0; }
   .sim-title { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .sim-link { font-family:var(--mono); font-size:10px; color:var(--muted2); text-decoration:none; flex-shrink:0; }
-  .sim-link:hover { color:var(--accent2); }
-
-  /* Status */
-  .status-box { text-align:center; padding:50px 20px; color:var(--muted2); font-family:var(--mono); font-size:12px; line-height:2.2; }
-  .spinner { display:inline-block; width:20px; height:20px; border:2px solid var(--border2); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin-bottom:10px; }
-  @keyframes spin { to { transform:rotate(360deg); } }
-  .err-box { background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.25); border-radius:8px; padding:16px 20px; color:#fca5a5; font-size:12px; font-family:var(--mono); line-height:1.8; }
-
+  .empty-msg { text-align:center; padding:40px; color:var(--muted2); font-family:var(--mono); font-size:12px; }
   ::-webkit-scrollbar { width:5px; }
   ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
 </style>
@@ -132,7 +98,8 @@
   <div class="nav-sep"></div>
   <span class="nav-title">FAQ Analyzer</span>
   <div class="nav-right">
-    <span class="last-run" id="lastRunLabel">분석 전</span>
+    <span class="demo-badge">DEMO</span>
+    <span class="last-run">샘플 데이터 | 최근 12개월 기준</span>
   </div>
 </nav>
 
@@ -153,196 +120,134 @@
     <div class="sb-item" onclick="filterScore(3,this)"><span>★★★ 3점</span><span class="sb-count" id="cnt-s3">0</span></div>
   </aside>
 
-  <main class="main" id="main">
-
-    <!-- 초기 설정 화면 -->
-    <div id="setupWrap" class="setup-wrap">
-      <div class="setup-panel">
-        <div class="setup-title">🔍 FAQ Analyzer</div>
-        <div class="setup-desc">
-          Backlog API 키를 입력하면 <b>DIRECTCLOUDINQUIRY</b> 프로젝트의<br>
-          최근 12개월 문의를 자동으로 분석합니다.
-        </div>
-        <div class="field">
-          <label>Backlog API Key</label>
-          <input type="password" id="apiKeyInput" placeholder="API 키를 입력하세요" autocomplete="off"
-            onkeydown="if(event.key==='Enter') startAnalysis()">
-        </div>
-        <button class="btn-primary" id="startBtn" onclick="startAnalysis()">분석 시작</button>
-        <div class="setup-note">
-          ⚠ API 키는 페이지를 닫으면 사라집니다. 코드에 저장되지 않아요.<br>
-          📌 스페이스: directc.backlog.com / 프로젝트: DIRECTCLOUDINQUIRY
-          🖥 반드시 VS Code Live Server로 실행해주세요 (file:// 직접 열기 불가)<br>
-        </div>
+  <main class="main">
+    <div class="stats">
+      <div class="stat"><div class="stat-label">분석된 문의</div><div class="stat-val c-blue" id="st-total">-</div><div class="stat-sub">최근 12개월</div></div>
+      <div class="stat"><div class="stat-label">FAQ 후보 (3점↑)</div><div class="stat-val c-green" id="st-faq">-</div><div class="stat-sub" id="st-pct">-</div></div>
+      <div class="stat"><div class="stat-label">유사 문의 그룹</div><div class="stat-val c-amber" id="st-groups">-</div><div class="stat-sub">반복 문의 묶음</div></div>
+      <div class="stat"><div class="stat-label">최다 반복</div><div class="stat-val c-cyan" id="st-top">-</div><div class="stat-sub">건 (동일 주제)</div></div>
+    </div>
+    <div class="toolbar">
+      <span class="tb-label">필터</span>
+      <div class="chip on" id="chip-all"   onclick="chipFilter('all')">전체</div>
+      <div class="chip"    id="chip-high"  onclick="chipFilter('high')">4점↑</div>
+      <div class="chip"    id="chip-group" onclick="chipFilter('group')">그룹 있음</div>
+      <div class="tb-right">
+        <select class="sort-sel" id="sortSel" onchange="renderCards()">
+          <option value="score">적합도 높은 순</option>
+          <option value="count">유사 건수 많은 순</option>
+          <option value="recent">최신 순</option>
+        </select>
       </div>
     </div>
-
-    <!-- 대시보드 -->
-    <div id="dashboard" style="display:none; flex-direction:column; gap:14px;">
-      <div class="stats">
-        <div class="stat"><div class="stat-label">분석된 문의</div><div class="stat-val c-blue" id="st-total">-</div><div class="stat-sub">최근 12개월</div></div>
-        <div class="stat"><div class="stat-label">FAQ 후보 (3점↑)</div><div class="stat-val c-green" id="st-faq">-</div><div class="stat-sub" id="st-pct">-</div></div>
-        <div class="stat"><div class="stat-label">유사 문의 그룹</div><div class="stat-val c-amber" id="st-groups">-</div><div class="stat-sub">반복 문의 묶음</div></div>
-        <div class="stat"><div class="stat-label">최다 반복</div><div class="stat-val c-cyan" id="st-top">-</div><div class="stat-sub">건 (동일 주제)</div></div>
-      </div>
-      <div class="toolbar">
-        <span class="tb-label">필터</span>
-        <div class="chip on" id="chip-all"   onclick="chipFilter('all')">전체</div>
-        <div class="chip"    id="chip-high"  onclick="chipFilter('high')">4점↑</div>
-        <div class="chip"    id="chip-group" onclick="chipFilter('group')">그룹 있음</div>
-        <div class="tb-right">
-          <select class="sort-sel" id="sortSel" onchange="renderCards()">
-            <option value="score">적합도 높은 순</option>
-            <option value="count">유사 건수 많은 순</option>
-            <option value="recent">최신 순</option>
-          </select>
-          <button class="btn-reset" onclick="resetApp()">⟳ 재설정</button>
-        </div>
-      </div>
-      <div id="statusBox"></div>
-      <div class="faq-list" id="faqList"></div>
-    </div>
-
+    <div class="faq-list" id="faqList"></div>
   </main>
 </div>
 
 <script>
-const SPACE   = 'directc.backlog.com';
-const PROJECT = 'DIRECTCLOUDINQUIRY';
-const BASE    = `https://${SPACE}`;
-
-// ── 카테고리 규칙 ─────────────────────────────────────────────
-const CATS = [
-  { key:'파일공유', cls:'cat-file', id:'file', keywords:['공유','링크','다운로드','업로드','파일','share','download','upload','url'] },
-  { key:'모바일앱', cls:'cat-mob',  id:'mob',  keywords:['모바일','앱','ios','android','아이폰','스마트폰','태블릿'] },
-  { key:'권한관리', cls:'cat-perm', id:'perm', keywords:['권한','permission','접근','폴더','그룹','관리자','admin'] },
-  { key:'인증',     cls:'cat-auth', id:'auth', keywords:['로그인','login','sso','인증','비밀번호','password','세션','otp','2fa'] },
-  { key:'네트워크', cls:'cat-net',  id:'net',  keywords:['접속','연결','ip','vpn','네트워크','오프라인','방화벽'] },
-  { key:'동기화',   cls:'cat-sync', id:'sync', keywords:['동기화','sync','백업','backup','갱신'] },
+// ── 샘플 데이터 ───────────────────────────────────────────────
+const SAMPLE = [
+  {
+    id:1042, key:'DCINQ-1042', score:5, groupSize:8,
+    title:'공유 링크를 클릭하면 "접근 권한이 없습니다" 오류가 납니다',
+    cat:{ key:'파일공유', cls:'cat-file', id:'file' },
+    similar:[
+      { id:1067, key:'DCINQ-1067', summary:'링크 열면 접근 불가 메시지 표시' },
+      { id:1089, key:'DCINQ-1089', summary:'외부 사용자 공유 링크 오류' },
+      { id:1102, key:'DCINQ-1102', summary:'공유 URL 접속 안 됨' },
+      { id:1115, key:'DCINQ-1115', summary:'파일 공유 후 상대방이 열지 못함' },
+      { id:1123, key:'DCINQ-1123', summary:'링크 만료 전인데 접근 불가' },
+    ]
+  },
+  {
+    id:1089, key:'DCINQ-1089', score:5, groupSize:5,
+    title:'모바일 앱에서 파일 업로드가 되지 않습니다',
+    cat:{ key:'모바일앱', cls:'cat-mob', id:'mob' },
+    similar:[
+      { id:1095, key:'DCINQ-1095', summary:'iOS에서 파일 첨부 안 됨' },
+      { id:1110, key:'DCINQ-1110', summary:'안드로이드 업로드 오류' },
+      { id:1138, key:'DCINQ-1138', summary:'모바일에서 사진 올리기 실패' },
+    ]
+  },
+  {
+    id:1103, key:'DCINQ-1103', score:4, groupSize:4,
+    title:'폴더 편집 권한을 특정 사용자에게만 부여할 수 있나요?',
+    cat:{ key:'권한관리', cls:'cat-perm', id:'perm' },
+    similar:[
+      { id:1118, key:'DCINQ-1118', summary:'사용자별 접근 권한 제한 방법' },
+      { id:1125, key:'DCINQ-1125', summary:'편집 권한 부여 방법 문의' },
+    ]
+  },
+  {
+    id:1131, key:'DCINQ-1131', score:4, groupSize:3,
+    title:'SSO 로그인 후 자동으로 로그아웃됩니다',
+    cat:{ key:'인증', cls:'cat-auth', id:'auth' },
+    similar:[
+      { id:1144, key:'DCINQ-1144', summary:'로그인 유지가 안 됩니다' },
+      { id:1158, key:'DCINQ-1158', summary:'세션 만료가 너무 빈번합니다' },
+    ]
+  },
+  {
+    id:1201, key:'DCINQ-1201', score:4, groupSize:4,
+    title:'동기화가 완료됐는데 PC에서 파일이 보이지 않습니다',
+    cat:{ key:'동기화', cls:'cat-sync', id:'sync' },
+    similar:[
+      { id:1215, key:'DCINQ-1215', summary:'동기화 후 파일 누락' },
+      { id:1228, key:'DCINQ-1228', summary:'클라우드에는 있는데 로컬에 없음' },
+    ]
+  },
+  {
+    id:1155, key:'DCINQ-1155', score:3, groupSize:2,
+    title:'대용량 파일 업로드 시 중간에 멈춥니다',
+    cat:{ key:'파일공유', cls:'cat-file', id:'file' },
+    similar:[
+      { id:1170, key:'DCINQ-1170', summary:'1GB 이상 파일 업로드 실패' },
+    ]
+  },
+  {
+    id:1162, key:'DCINQ-1162', score:2, groupSize:1,
+    title:'특정 IP에서만 접속이 불가능합니다',
+    cat:{ key:'네트워크', cls:'cat-net', id:'net' },
+    similar:[]
+  },
+  {
+    id:1180, key:'DCINQ-1180', score:3, groupSize:2,
+    title:'비밀번호 재설정 메일이 오지 않습니다',
+    cat:{ key:'인증', cls:'cat-auth', id:'auth' },
+    similar:[
+      { id:1192, key:'DCINQ-1192', summary:'초기화 이메일 미수신' },
+    ]
+  },
+  {
+    id:1240, key:'DCINQ-1240', score:3, groupSize:2,
+    title:'파일 미리보기가 지원되는 형식이 어떻게 되나요?',
+    cat:{ key:'파일공유', cls:'cat-file', id:'file' },
+    similar:[
+      { id:1251, key:'DCINQ-1251', summary:'PDF 미리보기 안 됨' },
+    ]
+  },
+  {
+    id:1260, key:'DCINQ-1260', score:4, groupSize:3,
+    title:'관리자 계정을 추가로 만들 수 있나요?',
+    cat:{ key:'권한관리', cls:'cat-perm', id:'perm' },
+    similar:[
+      { id:1271, key:'DCINQ-1271', summary:'서브 관리자 권한 설정' },
+      { id:1285, key:'DCINQ-1285', summary:'관리자 계정 수 제한 문의' },
+    ]
+  },
 ];
 
-function classify(text) {
-  const t = (text||'').toLowerCase();
-  for (const c of CATS) if (c.keywords.some(k => t.includes(k))) return c;
-  return { key:'기타', cls:'cat-etc', id:'etc', keywords:[] };
-}
+const CATS_LIST = ['파일공유','모바일앱','권한관리','인증','네트워크','동기화','기타'];
+const CATS_ID   = ['file','mob','perm','auth','net','sync','etc'];
 
-// ── 점수 계산 ─────────────────────────────────────────────────
-function calcScore(groupSize, summary) {
-  let s = groupSize >= 5 ? 5 : groupSize >= 3 ? 4 : groupSize >= 2 ? 3 : 2;
-  if ((summary||'').match(/[?？]/)) s = Math.min(5, s + 1);
-  return s;
-}
+let allCards = [...SAMPLE];
+let activeFilter = 'all', activeCat = 'all', activeScore = null;
 
-// ── 그룹화 ───────────────────────────────────────────────────
-function groupIssues(issues) {
-  const used = new Set();
-  const groups = [];
-  issues.forEach((issue, i) => {
-    if (used.has(i)) return;
-    const cat = classify(issue.summary + ' ' + (issue.description||''));
-    const words1 = tokenize(issue.summary);
-    const similar = issues.filter((iss, j) => {
-      if (used.has(j) || j === i) return false;
-      const cat2 = classify(iss.summary + ' ' + (iss.description||''));
-      if (cat2.key !== cat.key || cat.key === '기타') return false;
-      const words2 = tokenize(iss.summary);
-      return words1.filter(w => words2.includes(w)).length >= 1;
-    });
-    [issue, ...similar].forEach(iss => used.add(issues.indexOf(iss)));
-    groups.push({ cat, issues: [issue, ...similar] });
-  });
-  return groups;
-}
-
-function tokenize(str) {
-  return (str||'').replace(/[^\w가-힣]/g,' ').split(/\s+/).filter(w => w.length > 1);
-}
-
-// ── 상태 ─────────────────────────────────────────────────────
-let allCards = [], activeFilter = 'all', activeCat = 'all', activeScore = null;
-
-// ── 분석 시작 ─────────────────────────────────────────────────
-async function startAnalysis() {
-  const apiKey = document.getElementById('apiKeyInput').value.trim();
-  if (!apiKey) return alert('API 키를 입력해주세요.');
-  const btn = document.getElementById('startBtn');
-  btn.disabled = true; btn.textContent = '분석 중...';
-
-  document.getElementById('setupWrap').style.display = 'none';
-  const dash = document.getElementById('dashboard');
-  dash.style.display = 'flex';
-  showLoading('Backlog에서 문의를 가져오는 중...');
-
-  try {
-    const pid = await getProjectId(apiKey);
-    showLoading('프로젝트 확인 완료. 문의 목록 수집 중...');
-    const issues = await fetchIssues(apiKey, pid);
-    showLoading(`${issues.length}건 수집 완료. 분류 중...`);
-    await sleep(200);
-
-    const groups = groupIssues(issues);
-    allCards = groups.map(g => ({
-      id:        g.issues[0].id,
-      key:       g.issues[0].issueKey,
-      title:     g.issues[0].summary,
-      cat:       g.cat,
-      score:     calcScore(g.issues.length, g.issues[0].summary),
-      groupSize: g.issues.length,
-      similar:   g.issues.slice(1),
-      created:   g.issues[0].created,
-      url:       `${BASE}/view/${g.issues[0].issueKey}`,
-    }));
-
-    updateSidebar(); updateStats(); renderCards(); hideStatus();
-    document.getElementById('lastRunLabel').textContent =
-      `마지막 분석: ${new Date().toLocaleDateString('ko-KR')} | 최근 12개월`;
-    document.getElementById('apiKeyInput').value = '';
-
-  } catch(e) {
-    document.getElementById('statusBox').innerHTML =
-      `<div class="err-box">⚠ 오류: ${e.message}<br><br>API 키와 네트워크 연결을 확인하고 재시도해주세요.</div>`;
-    btn.disabled = false; btn.textContent = '분석 시작';
-    document.getElementById('setupWrap').style.display = 'flex';
-    dash.style.display = 'none';
-  }
-}
-
-// ── API 호출 ─────────────────────────────────────────────────
-async function getProjectId(apiKey) {
-  const r = await fetch(`${BASE}/api/v2/projects/${PROJECT}?apiKey=${encodeURIComponent(apiKey)}`);
-  if (!r.ok) throw new Error(`프로젝트를 찾을 수 없습니다 (${r.status}). API 키를 확인해주세요.`);
-  return (await r.json()).id;
-}
-
-async function fetchIssues(apiKey, projectId) {
-  const since = new Date(); since.setFullYear(since.getFullYear() - 1);
-  const sinceStr = since.toISOString().slice(0,10);
-  let all = [], offset = 0;
-  while (true) {
-    // Backlog API: projectId[]와 createdSince 파라미터 사용
-    const p = new URLSearchParams({
-      apiKey,
-      count: 100,
-      offset,
-      createdSince: sinceStr,
-      sort: 'created',
-      order: 'desc'
-    });
-    // projectId[]는 배열 파라미터라 별도 추가
-    p.append('projectId[]', projectId);
-    const r = await fetch(`${BASE}/api/v2/issues?${p}`);
-    if (!r.ok) {
-      const errBody = await r.text().catch(() => '');
-      throw new Error(`문의 수집 실패 (${r.status}): ${errBody.slice(0,100)}`);
-    }
-    const data = await r.json();
-    all = all.concat(data);
-    if (data.length < 100) break;
-    offset += 100;
-    showLoading(`${all.length}건 수집 중...`);
-  }
-  return all;
+// ── 초기화 ────────────────────────────────────────────────────
+function init() {
+  updateSidebar();
+  updateStats();
+  renderCards();
 }
 
 // ── 렌더링 ────────────────────────────────────────────────────
@@ -355,20 +260,18 @@ function renderCards() {
   if (activeFilter === 'group') list = list.filter(c => c.groupSize >= 2);
   if (sort === 'score')  list.sort((a,b) => b.score - a.score || b.groupSize - a.groupSize);
   if (sort === 'count')  list.sort((a,b) => b.groupSize - a.groupSize);
-  if (sort === 'recent') list.sort((a,b) => new Date(b.created) - new Date(a.created));
 
   const el = document.getElementById('faqList');
   el.innerHTML = list.length === 0
-    ? '<div class="status-box">해당 조건의 문의가 없습니다.</div>'
+    ? '<div class="empty-msg">해당 조건의 문의가 없습니다.</div>'
     : list.map((c,i) => cardHTML(c,i)).join('');
 }
 
 function cardHTML(c, i) {
   const simRows = c.similar.slice(0,5).map(s =>
     `<div class="sim-row">
-       <span class="sim-id">${esc(s.issueKey||'#'+s.id)}</span>
-       <span class="sim-title">${esc(s.summary||'')}</span>
-       <a class="sim-link" href="${BASE}/view/${s.issueKey||PROJECT+'-'+s.id}" target="_blank">↗</a>
+       <span class="sim-id">${s.key}</span>
+       <span class="sim-title">${esc(s.summary)}</span>
      </div>`).join('');
   const more = c.similar.length > 5
     ? `<div class="sim-row"><span class="sim-id" style="color:var(--muted2)">+${c.similar.length-5}건</span><span class="sim-title" style="color:var(--muted2)">더 보기</span></div>` : '';
@@ -387,7 +290,7 @@ function cardHTML(c, i) {
         </div>
       </div>
       <div class="card-right">
-        <a class="bl-link" href="${c.url}" target="_blank">${esc(c.key||'#'+c.id)} ↗</a>
+        <span class="bl-link">${c.key}</span>
         <span class="chevron">▼</span>
       </div>
     </div>
@@ -402,9 +305,8 @@ function cardHTML(c, i) {
       <div class="panel">
         <div class="panel-title">유사 문의 ${c.groupSize}건</div>
         <div class="sim-row">
-          <span class="sim-id">${esc(c.key||'#'+c.id)}</span>
+          <span class="sim-id">${c.key}</span>
           <span class="sim-title">${esc(c.title)}</span>
-          <a class="sim-link" href="${c.url}" target="_blank">↗</a>
         </div>
         ${simRows}${more}${noSim}
       </div>
@@ -415,25 +317,23 @@ function cardHTML(c, i) {
 // ── 사이드바 / 통계 ───────────────────────────────────────────
 function updateSidebar() {
   document.getElementById('cnt-all').textContent = allCards.length;
-  CATS.forEach(c => {
-    document.getElementById(`cnt-${c.id}`).textContent =
-      allCards.filter(x => x.cat.key === c.key).length;
+  CATS_LIST.forEach((cat, i) => {
+    document.getElementById(`cnt-${CATS_ID[i]}`).textContent =
+      allCards.filter(c => c.cat.key === cat).length;
   });
-  document.getElementById('cnt-etc').textContent =
-    allCards.filter(x => x.cat.key === '기타').length;
   [5,4,3].forEach(s =>
     document.getElementById(`cnt-s${s}`).textContent =
-      allCards.filter(x => x.score === s).length);
+      allCards.filter(c => c.score === s).length);
 }
 
 function updateStats() {
   const total = allCards.length;
   const faq   = allCards.filter(c => c.score >= 3).length;
   const grps  = allCards.filter(c => c.groupSize >= 2).length;
-  const top   = allCards.length ? Math.max(...allCards.map(c => c.groupSize)) : 0;
+  const top   = Math.max(...allCards.map(c => c.groupSize));
   document.getElementById('st-total').textContent  = total;
   document.getElementById('st-faq').textContent    = faq;
-  document.getElementById('st-pct').textContent    = total ? `전체의 ${Math.round(faq/total*100)}%` : '-';
+  document.getElementById('st-pct').textContent    = `전체의 ${Math.round(faq/total*100)}%`;
   document.getElementById('st-groups').textContent = grps;
   document.getElementById('st-top').textContent    = top;
 }
@@ -457,21 +357,8 @@ function chipFilter(type) {
 }
 function toggle(id) { document.getElementById(id).classList.toggle('open'); }
 function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-function showLoading(msg) {
-  document.getElementById('statusBox').innerHTML =
-    `<div class="status-box"><div class="spinner"></div><br>${msg}</div>`;
-}
-function hideStatus() { document.getElementById('statusBox').innerHTML = ''; }
-function resetApp() {
-  allCards = []; activeFilter = 'all'; activeCat = 'all'; activeScore = null;
-  document.getElementById('dashboard').style.display = 'none';
-  document.getElementById('setupWrap').style.display = 'flex';
-  document.getElementById('startBtn').disabled = false;
-  document.getElementById('startBtn').textContent = '분석 시작';
-  document.getElementById('lastRunLabel').textContent = '분석 전';
-  document.getElementById('cnt-all').textContent = '-';
-}
+
+init();
 </script>
 </body>
 </html>
