@@ -172,6 +172,7 @@
         <div class="setup-note">
           ⚠ API 키는 페이지를 닫으면 사라집니다. 코드에 저장되지 않아요.<br>
           📌 스페이스: directc.backlog.com / 프로젝트: DIRECTCLOUDINQUIRY
+          🖥 반드시 VS Code Live Server로 실행해주세요 (file:// 직접 열기 불가)<br>
         </div>
       </div>
     </div>
@@ -319,10 +320,22 @@ async function fetchIssues(apiKey, projectId) {
   const sinceStr = since.toISOString().slice(0,10);
   let all = [], offset = 0;
   while (true) {
-    const p = new URLSearchParams({ apiKey, projectId, count:100, offset,
-      'updatedSince': sinceStr, sort:'created', order:'desc' });
+    // Backlog API: projectId[]와 createdSince 파라미터 사용
+    const p = new URLSearchParams({
+      apiKey,
+      count: 100,
+      offset,
+      createdSince: sinceStr,
+      sort: 'created',
+      order: 'desc'
+    });
+    // projectId[]는 배열 파라미터라 별도 추가
+    p.append('projectId[]', projectId);
     const r = await fetch(`${BASE}/api/v2/issues?${p}`);
-    if (!r.ok) throw new Error(`문의 수집 실패 (${r.status})`);
+    if (!r.ok) {
+      const errBody = await r.text().catch(() => '');
+      throw new Error(`문의 수집 실패 (${r.status}): ${errBody.slice(0,100)}`);
+    }
     const data = await r.json();
     all = all.concat(data);
     if (data.length < 100) break;
